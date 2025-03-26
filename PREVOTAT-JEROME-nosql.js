@@ -62,22 +62,50 @@ db.lego.updateOne(
 
 //3. Recherche (2pts par question)
 //Listez tous les sets Lego ayant pour thème "Star Wars", triés par année de sortie en ordre décroissant.
-
+db.lego.find(
+    {
+        "theme":"Star Wars"
+    }
+).sort({"annee_sortie":-1});
 
 //Listez les sets Lego qui ont un prix supérieur à 100€, triés par nombre de pièces décroissant.
-
+db.lego.find(
+    {
+        "prix":{$gt:100}
+    }
+).sort({"nombre_de_pieces":-1});
 
 //Lister les 3 sets Lego qui ont le plus de figurines, afficher uniquement leur nom et le nombre de figurines.
-
+db.lego.find(
+    {},
+    {
+        "nom":1,
+        "nombre_de_figures":1
+    }
+).sort({"nombre_de_figures":-1}).limit(3);
 
 //Trouvez les sets Lego avec une ou plusieurs évaluations supérieures ou égales à 4.
-
+db.lego.find(
+    {
+        "evaluations.note":{$gte:4}
+    }
+);
 
 //Trouvez les sets Lego ayant le thème "Technic" ou "Creator" et dont le nombre de pièces est inférieur à 2000.
-
+db.lego.find(
+    {
+        "theme":{$in:["Technic","Creator"]},
+        "nombre_de_pieces":{$lt:2000}
+    }
+);
 
 //Trouvez tous les sets Lego avec le thème "Harry Potter" publiés entre 2000 et 2010.
-
+db.lego.find(
+    {
+        "theme":"Harry Potter",
+        "annee_sortie":{$gte:2000,$lte:2010}
+    }
+);
 
 //Trouvez les gros sets Lego les plus populaires, c’est-à-dire ceux dont la moyenne des évaluations est supérieure ou égale à 4 et dont le nombre de pièces est supérieur à 1000.
 
