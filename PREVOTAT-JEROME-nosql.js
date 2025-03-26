@@ -12,12 +12,53 @@ Faucon Millenium :
     Thème : Star Wars
     Evaluations : Utilisateurs "David" (note 5) et "Eve" (note 3).*/
 
+db.lego.insertMany([
+    {
+        "nom":"Lego Creator 3-in-1",
+        "Année de sortie" : 2020,
+        "Nombre de pièces" : 564,
+        "Prix" : 59.99,
+        "evaluations":[{"utilisateur":"Charlie", "note":4}]
+    },
+    {
+        "nom":"Faucon Millenium",
+        "annee_sortie" : 2019,
+        "nombre_de_pieces" : 1050,
+        "prix" : 89.99,
+        "theme":"Star Wars",
+        "evaluations":[
+            {"utilisateur":"David", "note":5},
+            {"utilisateur":"Eve", "note":3}
+        ]
+    }
+]);
+    
 //2. Modification (4 points)
 //a. Mettez à jour le prix du set "Lego Creator 3-in-1" à 49.99 €.
-
+db.lego.updateOne(
+    {
+        "name": "Lego Creator 3-in-1"
+    },
+    {
+        $set: {"prix": 49.99}
+    }
+ );
 
 //b. Ajoutez une évaluation de l'utilisateur "Frank" avec une note de 4 pour le set "Millennium Falcon".
-
+db.lego.updateOne(
+    {
+        "nom":"Faucon Millenium"
+    },
+    {
+        $push:{
+            "evaluations":
+                        {
+                            "utilisateur":"Frank",
+                            "note":4
+                        }
+        }
+    }
+);
 
 //3. Recherche (2pts par question)
 //Listez tous les sets Lego ayant pour thème "Star Wars", triés par année de sortie en ordre décroissant.
