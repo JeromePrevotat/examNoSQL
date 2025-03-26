@@ -107,14 +107,45 @@ db.lego.find(
     }
 );
 
-//Trouvez les gros sets Lego les plus populaires, c’est-à-dire ceux dont la moyenne des évaluations est supérieure ou égale à 4 et dont le nombre de pièces est supérieur à 1000.
-
+//Trouvez les gros sets Lego les plus populaires,
+// c’est-à-dire ceux dont la moyenne des évaluations est supérieure ou égale à 4
+// et dont le nombre de pièces est supérieur à 1000.
+db.lego.aggregate([
+    {$match:{"nombre_de_pieces":{$gt:1000}}},
+    {$unwind:"$evaluations"},
+    {$group:{
+        "_id":"$_id",
+        "avgNote": {$avg:"$evaluations.note"}
+    }},
+    {$match:{"avgNote": {$gte:4}}}
+]);
 
 //Trouvez les sets Lego qui ont uniquement des évaluations de 5/5.
-
+db.lego.aggregate([
+    {$unwind:"$evaluations"},
+    {$match:{"evaluations.note":5}},
+    {$group:{
+        "_id":"_id",
+        "note":"$evaluations.note"
+    }}
+]);
 
 //4. Suppression (4 points)
 //a. Supprimez l'évaluation de l'utilisateur "Bob" pour le set "Faucon Millenium" de 2019.
-
+db.lego.updateOne(
+    {
+        "nom":"Faucon Millenium",
+        {$unwind:"$evaluations"},
+        {$match:{"$evaluations.utilisateur":"Bob"}}
+        
+    },
+    {$set:{"$evaluations.utilisateur":""}},
+    {$set:{"$evaluations.note":""}}
+);
 
 //b. Supprimez tous les sets Lego dont le nombre de pièces est inférieur à 1000.
+db.lego.deleteMany(
+    {
+        "nombre_de_pieces":{$lt:1000}
+    }
+);
